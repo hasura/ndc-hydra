@@ -1,0 +1,55 @@
+services:
+  ndc-hydra:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    # volumes:
+    #   - ./config:/etc/connector:ro
+    environment:
+      HYDRA_PUBLIC_SERVER_URL: http://hydra:4444
+      HYDRA_ADMIN_SERVER_URL: http://hydra:4445
+      HASURA_LOG_LEVEL: debug
+
+  hydra:
+    restart: always
+    image: oryd/hydra:v1.11.10
+    command:
+      - serve
+      - all
+      - --dangerous-force-http
+    depends_on:
+      - hydra-migrate
+      - postgres
+    ports:
+      - "4444:4444"
+      - "4445:4445"
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      SECRETS_SYSTEM: ${SECRETS_SYSTEM}
+      OIDC_DYNAMIC_CLIENT_REGISTRATION_ENABLED: "true"
+      LOG_LEAK_SENSITIVE_VALUES: "true"
+
+  hydra-migrate:
+    restart: on-failure
+    image: oryd/hydra:v1.11.10
+    depends_on:
+      - postgres
+    command: migrate sql -e --yes
+    environment:
+      DSN: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+
+  postgres:
+    image: postgres:16-alpine3.18
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "10432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+volumes:
+  postgres_data:

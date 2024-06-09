@@ -1,0 +1,19 @@
+{
+  "collection_relationships": {},
+  "operations": [
+    {
+      "type": "procedure",
+      "name": "rejectLogoutRequest",
+      "arguments": {
+        "body": {
+          "error": "k4iDrz9ZY9",
+          "error_debug": "65Utc1tt0r",
+          "error_description": "poQ76Ab9wa",
+          "error_hint": "TyGMw0igWO",
+          "status_code": "6038855996888211756"
+        },
+        "logout_challenge": "0gLczrTMZ6"
+      }
+    }
+  ]
+}

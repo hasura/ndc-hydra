@@ -1,0 +1,5 @@
+files:
+  - file: schema-admin.json
+    spec: ndc
+  - file: schema-public.json
+    spec: ndc

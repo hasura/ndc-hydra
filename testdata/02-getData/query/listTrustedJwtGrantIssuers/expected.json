@@ -1,0 +1,18 @@
+[
+  {
+    "rows": [
+      {
+        "__value": [
+          {
+            "allow_any_subject": false,
+            "expires_at": "2040-01-01T00:00:00Z",
+            "issuer": "etd1aDJlEd",
+            "public_key": { "kid": "private:eAJi2E8Clh", "set": "etd1aDJlEd" },
+            "scope": ["StkNfiEI2M"],
+            "subject": "TibzF1JqYe"
+          }
+        ]
+      }
+    ]
+  }
+]

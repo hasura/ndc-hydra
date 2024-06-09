@@ -1,0 +1,14 @@
+{
+  "collection_relationships": {},
+  "operations": [
+    {
+      "type": "procedure",
+      "name": "revokeConsentSessions",
+      "arguments": {
+        "all": false,
+        "client": "D1btRXgLLv",
+        "subject": "mNMMhSMG6n"
+      }
+    }
+  ]
+}

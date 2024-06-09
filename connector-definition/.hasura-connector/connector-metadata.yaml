@@ -1,0 +1,20 @@
+packagingDefinition:
+  type: PrebuiltDockerImage
+  dockerImage: ghcr.io/hasura/ndc-hydra:{{VERSION}}
+supportedEnvironmentVariables:
+  - HYDRA_ADMIN_SERVER_URL
+  - HYDRA_ADMIN_TIMEOUT
+  - HYDRA_ADMIN_RETRY_TIMES
+  - HYDRA_ADMIN_RETRY_DELAY
+  - HYDRA_ADMIN_RETRY_HTTP_STATUS
+  - HYDRA_PUBLIC_SERVER_URL
+  - HYDRA_PUBLIC_TIMEOUT
+  - HYDRA_PUBLIC_RETRY_TIMES
+  - HYDRA_PUBLIC_RETRY_DELAY
+  - HYDRA_PUBLIC_RETRY_HTTP_STATUS
+commands: {}
+dockerComposeWatch:
+  # copy config files into the existing container and restart it
+  - path: ./config
+    target: /etc/connector
+    action: sync+restart

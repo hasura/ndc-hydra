@@ -1,0 +1,12 @@
+{
+  "collection_relationships": {},
+  "operations": [
+    {
+      "type": "procedure",
+      "name": "deleteOAuth2Token",
+      "arguments": {
+        "client_id": "2tQDnpJogH"
+      }
+    }
+  ]
+}
