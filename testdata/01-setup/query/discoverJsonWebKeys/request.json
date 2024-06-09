@@ -1,11 +1,6 @@
 {
-  "arguments": {
-    "set": {
-      "type": "literal",
-      "value": "test-jwk-set"
-    }
-  },
-  "collection": "getJsonWebKeySet",
+  "arguments": {},
+  "collection": "discoverJsonWebKeys",
   "collection_relationships": {},
   "query": {
     "fields": {
@@ -26,6 +21,10 @@
                       "column": "crv",
                       "type": "column"
                     },
+                    "d": {
+                      "column": "d",
+                      "type": "column"
+                    },
                     "dp": {
                       "column": "dp",
                       "type": "column"
@@ -42,12 +41,16 @@
                       "column": "k",
                       "type": "column"
                     },
-                    "kid": {
-                      "column": "kid",
-                      "type": "column"
-                    },
                     "kty": {
                       "column": "kty",
+                      "type": "column"
+                    },
+                    "p": {
+                      "column": "p",
+                      "type": "column"
+                    },
+                    "q": {
+                      "column": "q",
                       "type": "column"
                     },
                     "qi": {

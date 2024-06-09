@@ -1,76 +1,58 @@
 - op: remove
-  path: /paths/~1clients
-- op: remove
-  path: /paths/~1clients~1{id}
-- op: remove
-  path: /paths/~1clients~1{id}~1lifespans
-- op: remove
   path: /paths/~1health~1alive
 - op: remove
-  path: /paths/~1keys~1{set}
+  path: /paths/~1admin~1clients
 - op: remove
-  path: /paths/~1keys~1{set}~1{kid}
+  path: /paths/~1admin~1clients~1{id}
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1consent
+  path: /paths/~1admin~1clients~1{id}~1lifespans
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1consent~1accept
+  path: /paths/~1admin~1keys~1{set}
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1consent~1reject
+  path: /paths/~1admin~1keys~1{set}~1{kid}
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1login
+  path: /paths/~1admin~1oauth2~1auth~1requests~1consent
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1login~1accept
+  path: /paths/~1admin~1oauth2~1auth~1requests~1consent~1accept
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1login~1reject
+  path: /paths/~1admin~1oauth2~1auth~1requests~1consent~1reject
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1logout
+  path: /paths/~1admin~1oauth2~1auth~1requests~1login
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1logout~1accept
+  path: /paths/~1admin~1oauth2~1auth~1requests~1login~1accept
 - op: remove
-  path: /paths/~1oauth2~1auth~1requests~1logout~1reject
+  path: /paths/~1admin~1oauth2~1auth~1requests~1login~1reject
 - op: remove
-  path: /paths/~1oauth2~1auth~1sessions~1consent
+  path: /paths/~1admin~1oauth2~1auth~1requests~1logout
 - op: remove
-  path: /paths/~1oauth2~1auth~1sessions~1login
+  path: /paths/~1admin~1oauth2~1auth~1requests~1logout~1accept
 - op: remove
-  path: /paths/~1oauth2~1flush
+  path: /paths/~1admin~1oauth2~1auth~1requests~1logout~1reject
 - op: remove
-  path: /paths/~1oauth2~1introspect
+  path: /paths/~1admin~1oauth2~1auth~1sessions~1consent
 - op: remove
-  path: /paths/~1oauth2~1tokens
+  path: /paths/~1admin~1oauth2~1auth~1sessions~1login
 - op: remove
-  path: /paths/~1trust~1grants~1jwt-bearer~1issuers
+  path: /paths/~1admin~1oauth2~1introspect
 - op: remove
-  path: /paths/~1trust~1grants~1jwt-bearer~1issuers~1{id}
+  path: /paths/~1admin~1oauth2~1tokens
+- op: remove
+  path: /paths/~1admin~1trust~1grants~1jwt-bearer~1issuers
+- op: remove
+  path: /paths/~1admin~1trust~1grants~1jwt-bearer~1issuers~1{id}
 - op: remove
   path: /paths/~1version
 - op: remove
-  path: /paths/~1oauth2~1token/post/security
-- op: add
-  path: /paths/~1oauth2~1token/post/parameters/5
-  value:
-    type: string
-    name: client_secret
-    in: formData
-- op: add
-  path: /paths/~1oauth2~1token/post/parameters/6
-  value:
-    type: string
-    name: scope
-    in: formData
-- op: remove
   path: /paths/~1userinfo
 - op: remove
+  path: /paths/~1oauth2~1token/post/security
+- op: add
+  path: /components/schemas/oauth2TokenExchange_request/properties/client_secret
+  value:
+    type: string
+- op: add
+  path: /components/schemas/oauth2TokenExchange_request/properties/scope
+  value:
+    type: string
+- op: remove
   path: /paths/~1oauth2~1revoke/post/security
-- op: add
-  path: /paths/~1oauth2~1revoke/post/parameters/1
-  value:
-    type: string
-    name: client_id
-    in: formData
-- op: add
-  path: /paths/~1oauth2~1revoke/post/parameters/2
-  value:
-    type: string
-    name: client_secret
-    in: formData

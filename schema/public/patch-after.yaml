@@ -21,7 +21,7 @@
   path: /object_types/OAuth2Client/fields/token_endpoint_auth_method/type/underlying_type/name
   value: TokenEndpointAuthMethod
 - op: replace
-  path: /object_types/WellKnown/fields/token_endpoint_auth_methods_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/token_endpoint_auth_methods_supported/type/underlying_type/element_type/name
   value: TokenEndpointAuthMethod
 - op: add
   path: /scalar_types/OpenIDConnectSubjectType
@@ -37,7 +37,7 @@
   path: /object_types/OAuth2Client/fields/subject_type/type/underlying_type/name
   value: OpenIDConnectSubjectType
 - op: replace
-  path: /object_types/WellKnown/fields/subject_types_supported/type/element_type/name
+  path: /object_types/OidcConfiguration/fields/subject_types_supported/type/element_type/name
   value: OpenIDConnectSubjectType
 - op: add
   path: /scalar_types/OAuth2GrantType
@@ -52,7 +52,7 @@
         - refresh_token
       type: enum
 - op: replace
-  path: /object_types/WellKnown/fields/grant_types_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/grant_types_supported/type/underlying_type/element_type/name
   value: OAuth2GrantType
 - op: replace
   path: /object_types/OAuth2Client/fields/grant_types/type/underlying_type/element_type/name
@@ -83,7 +83,7 @@
         - openid
       type: enum
 - op: replace
-  path: /object_types/WellKnown/fields/scopes_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/scopes_supported/type/underlying_type/element_type/name
   value: OAuth2Scope
 - op: replace
   path: /object_types/OAuth2Client/fields/scope/type/underlying_type/name
@@ -99,7 +99,7 @@
         - S256
       type: enum
 - op: replace
-  path: /object_types/WellKnown/fields/code_challenge_methods_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/code_challenge_methods_supported/type/underlying_type/element_type/name
   value: OAuth2CodeChallenge
 - op: add
   path: /scalar_types/OAuth2SigningAlgorithm
@@ -110,15 +110,16 @@
       one_of:
         - none
         - RS256
+        - ES256
       type: enum
 - op: replace
-  path: /object_types/WellKnown/fields/id_token_signing_alg_values_supported/type/element_type/name
+  path: /object_types/OidcConfiguration/fields/id_token_signing_alg_values_supported/type/element_type/name
   value: OAuth2SigningAlgorithm
 - op: replace
-  path: /object_types/WellKnown/fields/request_object_signing_alg_values_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/request_object_signing_alg_values_supported/type/underlying_type/element_type/name
   value: OAuth2SigningAlgorithm
 - op: replace
-  path: /object_types/WellKnown/fields/userinfo_signing_alg_values_supported/type/underlying_type/element_type/name
+  path: /object_types/OidcConfiguration/fields/userinfo_signing_alg_values_supported/type/underlying_type/element_type/name
   value: OAuth2SigningAlgorithm
 - op: replace
   path: /object_types/OAuth2Client/fields/token_endpoint_auth_signing_alg/type/underlying_type/name
