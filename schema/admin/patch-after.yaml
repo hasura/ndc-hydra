@@ -85,6 +85,7 @@
       one_of:
         - none
         - RS256
+        - ES256
       type: enum
 - op: replace
   path: /object_types/OAuth2Client/fields/token_endpoint_auth_signing_alg/type/underlying_type/name
@@ -109,8 +110,8 @@
         - EdDSA
       type: enum
 - op: replace
-  path: /object_types/JsonWebKeySetGeneratorRequest/fields/alg/type/name
+  path: /object_types/CreateJsonWebKeySet/fields/alg/type/name
   value: JsonWebKeyAlgorithm
 - op: replace
-  path: /object_types/JSONWebKey/fields/alg/type/name
+  path: /object_types/JsonWebKey/fields/alg/type/name
   value: JsonWebKeyAlgorithm

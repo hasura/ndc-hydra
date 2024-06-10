@@ -10,8 +10,7 @@
       "times": "{{HYDRA_PUBLIC_RETRY_TIMES}}",
       "delay": "{{HYDRA_PUBLIC_RETRY_DELAY}}",
       "httpStatus": "{{HYDRA_PUBLIC_RETRY_HTTP_STATUS}}"
-    },
-    "version": "latest"
+    }
   },
   "collections": [],
   "functions": [
@@ -21,10 +20,10 @@
         "method": "get"
       },
       "arguments": {},
-      "description": "JSON Web Keys Discovery",
-      "name": "wellKnown",
+      "description": "Discover Well-Known JSON Web Keys",
+      "name": "discoverJsonWebKeys",
       "result_type": {
-        "name": "JSONWebKeySet",
+        "name": "JsonWebKeySet",
         "type": "named"
       }
     },
@@ -35,9 +34,9 @@
       },
       "arguments": {},
       "description": "OpenID Connect Discovery",
-      "name": "discoverOpenIDConfiguration",
+      "name": "discoverOidcConfiguration",
       "result_type": {
-        "name": "WellKnown",
+        "name": "OidcConfiguration",
         "type": "named"
       }
     },
@@ -47,10 +46,10 @@
         "method": "get"
       },
       "arguments": {},
-      "description": "Check Readiness Status",
-      "name": "isInstanceReady",
+      "description": "Check HTTP Server and Database Status",
+      "name": "isReady",
       "result_type": {
-        "name": "HealthStatus",
+        "name": "IsReady200Response",
         "type": "named"
       }
     },
@@ -60,8 +59,8 @@
         "method": "get"
       },
       "arguments": {},
-      "description": "The OAuth 2.0 Authorize Endpoint",
-      "name": "oauthAuth",
+      "description": "OAuth 2.0 Authorize Endpoint",
+      "name": "oAuth2Authorize",
       "result_type": {
         "type": "nullable",
         "underlying_type": {
@@ -76,11 +75,18 @@
         "method": "get",
         "parameters": [
           {
+            "style": "simple",
+            "explode": false,
             "name": "id",
             "in": "path",
             "schema": {
               "type": "String"
             }
+          }
+        ],
+        "security": [
+          {
+            "bearer": []
           }
         ]
       },
@@ -93,8 +99,8 @@
           }
         }
       },
-      "description": "Get an OAuth 2.0 Client using the OpenID / OAuth2 Dynamic Client Registration Management Protocol",
-      "name": "dynamicClientRegistrationGetOAuth2Client",
+      "description": "Get OAuth2 Client using OpenID Dynamic Client Registration",
+      "name": "getOidcDynamicClient",
       "result_type": {
         "name": "OAuth2Client",
         "type": "named"
@@ -106,8 +112,8 @@
         "method": "get"
       },
       "arguments": {},
-      "description": "OpenID Connect Front-Backchannel Enabled Logout",
-      "name": "disconnectUser",
+      "description": "OpenID Connect Front- and Back-channel Enabled Logout",
+      "name": "revokeOidcSession",
       "result_type": {
         "type": "nullable",
         "underlying_type": {
@@ -118,10 +124,98 @@
     }
   ],
   "object_types": {
-    "HealthStatus": {
+    "CreateVerifiableCredentialRequestBody": {
+      "fields": {
+        "format": {
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "proof": {
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "VerifiableCredentialProof",
+              "type": "named"
+            }
+          }
+        },
+        "types": {
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        }
+      }
+    },
+    "CredentialSupportedDraft00": {
+      "description": "Includes information about the supported verifiable credentials.",
+      "fields": {
+        "cryptographic_binding_methods_supported": {
+          "description": "OpenID Connect Verifiable Credentials Cryptographic Binding Methods Supported\n\nContains a list of cryptographic binding methods supported for signing the proof.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "cryptographic_suites_supported": {
+          "description": "OpenID Connect Verifiable Credentials Cryptographic Suites Supported\n\nContains a list of cryptographic suites methods supported for signing the proof.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "format": {
+          "description": "OpenID Connect Verifiable Credentials Format\n\nContains the format that is supported by this authorization server.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "types": {
+          "description": "OpenID Connect Verifiable Credentials Types\n\nContains the types of verifiable credentials supported.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        }
+      }
+    },
+    "IsReady200Response": {
       "fields": {
         "status": {
-          "description": "Status always contains \"ok\".",
+          "description": "Always \"ok\".",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -132,8 +226,7 @@
         }
       }
     },
-    "JSONWebKey": {
-      "description": "It is important that this model object is named JSONWebKey for\n\"swagger generate spec\" to generate only on definition of a\nJSONWebKey.",
+    "JsonWebKey": {
       "fields": {
         "alg": {
           "description": "The \"alg\" (algorithm) parameter identifies the algorithm intended for\nuse with the key.  The values used should either be registered in the\nIANA \"JSON Web Signature and Encryption Algorithms\" registry\nestablished by [JWA] or be a value that contains a Collision-\nResistant Name.",
@@ -286,16 +379,16 @@
         }
       }
     },
-    "JSONWebKeySet": {
-      "description": "It is important that this model object is named JSONWebKeySet for\n\"swagger generate spec\" to generate only on definition of a\nJSONWebKeySet. Since one with the same name is previously defined as\nclient.Client.JSONWebKeys and this one is last, this one will be\neffectively written in the swagger spec.",
+    "JsonWebKeySet": {
+      "description": "JSON Web Key Set",
       "fields": {
         "keys": {
-          "description": "The value of the \"keys\" parameter is an array of JWK values.  By\ndefault, the order of the JWK values within the array does not imply\nan order of preference among them, although applications of JWK Sets\ncan choose to assign a meaning to the order for their purposes, if\ndesired.",
+          "description": "List of JSON Web Keys\n\nThe value of the \"keys\" parameter is an array of JSON Web Key (JWK)\nvalues. By default, the order of the JWK values within the array does\nnot imply an order of preference among them, although applications\nof JWK Sets can choose to assign a meaning to the order for their\npurposes, if desired.",
           "type": {
             "type": "nullable",
             "underlying_type": {
               "element_type": {
-                "name": "JSONWebKey",
+                "name": "JsonWebKey",
                 "type": "named"
               },
               "type": "array"
@@ -305,7 +398,18 @@
       }
     },
     "OAuth2Client": {
+      "description": "OAuth 2.0 Clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are\ngenerated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities.",
       "fields": {
+        "access_token_strategy": {
+          "description": "OAuth 2.0 Access Token Strategy\n\nAccessTokenStrategy is the strategy used to generate access tokens.\nValid options are `jwt` and `opaque`. `jwt` is a bad idea, see https://www.ory.sh/docs/hydra/advanced#json-web-tokens\nSetting the stragegy here overrides the global setting in `strategies.access_token`.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
         "allowed_cors_origins": {
           "type": {
             "type": "nullable",
@@ -331,7 +435,7 @@
           }
         },
         "authorization_code_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -341,7 +445,7 @@
           }
         },
         "authorization_code_grant_id_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -351,7 +455,7 @@
           }
         },
         "authorization_code_grant_refresh_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -361,7 +465,7 @@
           }
         },
         "backchannel_logout_session_required": {
-          "description": "Boolean value specifying whether the RP requires that a sid (session ID) Claim be included in the Logout\nToken to identify the RP session with the OP when the backchannel_logout_uri is used.\nIf omitted, the default value is false.",
+          "description": "OpenID Connect Back-Channel Logout Session Required\n\nBoolean value specifying whether the RP requires that a sid (session ID) Claim be included in the Logout\nToken to identify the RP session with the OP when the backchannel_logout_uri is used.\nIf omitted, the default value is false.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -371,7 +475,7 @@
           }
         },
         "backchannel_logout_uri": {
-          "description": "RP URL that will cause the RP to log itself out when sent a Logout Token by the OP.",
+          "description": "OpenID Connect Back-Channel Logout URI\n\nRP URL that will cause the RP to log itself out when sent a Logout Token by the OP.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -381,7 +485,7 @@
           }
         },
         "client_credentials_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -391,7 +495,7 @@
           }
         },
         "client_id": {
-          "description": "ID  is the id for this client.",
+          "description": "OAuth 2.0 Client ID\n\nThe ID is immutable. If no ID is provided, a UUID4 will be generated.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -401,7 +505,7 @@
           }
         },
         "client_name": {
-          "description": "Name is the human-readable string name of the client to be presented to the\nend-user during authorization.",
+          "description": "OAuth 2.0 Client Name\n\nThe human-readable name of the client to be presented to the\nend-user during authorization.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -411,7 +515,7 @@
           }
         },
         "client_secret": {
-          "description": "Secret is the client's secret. The secret will be included in the create request as cleartext, and then\nnever again. The secret is stored using BCrypt so it is impossible to recover it. Tell your users\nthat they need to write the secret down as it will not be made available again.",
+          "description": "OAuth 2.0 Client Secret\n\nThe secret will be included in the create request as cleartext, and then\nnever again. The secret is kept in hashed format and is not recoverable once lost.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -421,7 +525,7 @@
           }
         },
         "client_secret_expires_at": {
-          "description": "SecretExpiresAt is an integer holding the time at which the client\nsecret will expire or 0 if it will not expire. The time is\nrepresented as the number of seconds from 1970-01-01T00:00:00Z as\nmeasured in UTC until the date/time of expiration.\n\nThis feature is currently not supported and it's value will always\nbe set to 0.",
+          "description": "OAuth 2.0 Client Secret Expires At\n\nThe field is currently not supported and its value is always 0.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -431,7 +535,7 @@
           }
         },
         "client_uri": {
-          "description": "ClientURI is an URL string of a web page providing information about the client.\nIf present, the server SHOULD display this URL to the end-user in\na clickable fashion.",
+          "description": "OAuth 2.0 Client URI\n\nClientURI is a URL string of a web page providing information about the client.\nIf present, the server SHOULD display this URL to the end-user in\na clickable fashion.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -453,7 +557,7 @@
           }
         },
         "created_at": {
-          "description": "CreatedAt returns the timestamp of the client's creation.",
+          "description": "OAuth 2.0 Client Creation Date\n\nCreatedAt returns the timestamp of the client's creation.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -463,7 +567,7 @@
           }
         },
         "frontchannel_logout_session_required": {
-          "description": "Boolean value specifying whether the RP requires that iss (issuer) and sid (session ID) query parameters be\nincluded to identify the RP session with the OP when the frontchannel_logout_uri is used.\nIf omitted, the default value is false.",
+          "description": "OpenID Connect Front-Channel Logout Session Required\n\nBoolean value specifying whether the RP requires that iss (issuer) and sid (session ID) query parameters be\nincluded to identify the RP session with the OP when the frontchannel_logout_uri is used.\nIf omitted, the default value is false.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -473,7 +577,7 @@
           }
         },
         "frontchannel_logout_uri": {
-          "description": "RP URL that will cause the RP to log itself out when rendered in an iframe by the OP. An iss (issuer) query\nparameter and a sid (session ID) query parameter MAY be included by the OP to enable the RP to validate the\nrequest and to determine which of the potentially multiple sessions is to be logged out; if either is\nincluded, both MUST be.",
+          "description": "OpenID Connect Front-Channel Logout URI\n\nRP URL that will cause the RP to log itself out when rendered in an iframe by the OP. An iss (issuer) query\nparameter and a sid (session ID) query parameter MAY be included by the OP to enable the RP to validate the\nrequest and to determine which of the potentially multiple sessions is to be logged out; if either is\nincluded, both MUST be.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -495,7 +599,7 @@
           }
         },
         "implicit_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -505,7 +609,7 @@
           }
         },
         "implicit_grant_id_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -515,16 +619,17 @@
           }
         },
         "jwks": {
+          "description": "OAuth 2.0 Client JSON Web Key Set\n\nClient's JSON Web Key Set [JWK] document, passed by value. The semantics of the jwks parameter are the same as\nthe jwks_uri parameter, other than that the JWK Set is passed by value, rather than by reference. This parameter\nis intended only to be used by Clients that, for some reason, are unable to use the jwks_uri parameter, for\ninstance, by native applications that might not have a location to host the contents of the JWK Set. If a Client\ncan use jwks_uri, it MUST NOT use jwks. One significant downside of jwks is that it does not enable key rotation\n(which jwks_uri does, as described in Section 10 of OpenID Connect Core 1.0 [OpenID.Core]). The jwks_uri and jwks\nparameters MUST NOT be used together.",
           "type": {
             "type": "nullable",
             "underlying_type": {
-              "name": "JoseJSONWebKeySet",
+              "name": "JSON",
               "type": "named"
             }
           }
         },
         "jwks_uri": {
-          "description": "URL for the Client's JSON Web Key Set [JWK] document. If the Client signs requests to the Server, it contains\nthe signing key(s) the Server uses to validate signatures from the Client. The JWK Set MAY also contain the\nClient's encryption keys(s), which are used by the Server to encrypt responses to the Client. When both signing\nand encryption keys are made available, a use (Key Use) parameter value is REQUIRED for all keys in the referenced\nJWK Set to indicate each key's intended usage. Although some algorithms allow the same key to be used for both\nsignatures and encryption, doing so is NOT RECOMMENDED, as it is less secure. The JWK x5c parameter MAY be used\nto provide X.509 representations of keys provided. When used, the bare key values MUST still be present and MUST\nmatch those in the certificate.",
+          "description": "OAuth 2.0 Client JSON Web Key Set URL\n\nURL for the Client's JSON Web Key Set [JWK] document. If the Client signs requests to the Server, it contains\nthe signing key(s) the Server uses to validate signatures from the Client. The JWK Set MAY also contain the\nClient's encryption keys(s), which are used by the Server to encrypt responses to the Client. When both signing\nand encryption keys are made available, a use (Key Use) parameter value is REQUIRED for all keys in the referenced\nJWK Set to indicate each key's intended usage. Although some algorithms allow the same key to be used for both\nsignatures and encryption, doing so is NOT RECOMMENDED, as it is less secure. The JWK x5c parameter MAY be used\nto provide X.509 representations of keys provided. When used, the bare key values MUST still be present and MUST\nmatch those in the certificate.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -534,7 +639,7 @@
           }
         },
         "jwt_bearer_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -544,7 +649,7 @@
           }
         },
         "logo_uri": {
-          "description": "LogoURI is an URL string that references a logo for the client.",
+          "description": "OAuth 2.0 Client Logo URI\n\nA URL string referencing the client's logo.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -557,33 +662,13 @@
           "type": {
             "type": "nullable",
             "underlying_type": {
-              "name": "JSONRawMessage",
+              "name": "JSON",
               "type": "named"
             }
           }
         },
         "owner": {
-          "description": "Owner is a string identifying the owner of the OAuth 2.0 Client.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "String",
-              "type": "named"
-            }
-          }
-        },
-        "password_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "String",
-              "type": "named"
-            }
-          }
-        },
-        "password_grant_refresh_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "OAuth 2.0 Client Owner\n\nOwner is a string identifying the owner of the OAuth 2.0 Client.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -593,7 +678,7 @@
           }
         },
         "policy_uri": {
-          "description": "PolicyURI is a URL string that points to a human-readable privacy policy document\nthat describes how the deployment organization collects, uses,\nretains, and discloses personal data.",
+          "description": "OAuth 2.0 Client Policy URI\n\nPolicyURI is a URL string that points to a human-readable privacy policy document\nthat describes how the deployment organization collects, uses,\nretains, and discloses personal data.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -627,7 +712,7 @@
           }
         },
         "refresh_token_grant_access_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -637,7 +722,7 @@
           }
         },
         "refresh_token_grant_id_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -647,7 +732,7 @@
           }
         },
         "refresh_token_grant_refresh_token_lifespan": {
-          "description": "TODO delete this type and replace it with ory/x/sqlxx/NullDuration when applying the custom client token TTL patch to Hydra 2.x",
+          "description": "Specify a time duration in milliseconds, seconds, minutes, hours.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -657,7 +742,7 @@
           }
         },
         "registration_access_token": {
-          "description": "RegistrationAccessToken can be used to update, get, or delete the OAuth2 Client.",
+          "description": "OpenID Connect Dynamic Client Registration Access Token\n\nRegistrationAccessToken can be used to update, get, or delete the OAuth2 Client. It is sent when creating a client\nusing Dynamic Client Registration.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -667,7 +752,7 @@
           }
         },
         "registration_client_uri": {
-          "description": "RegistrationClientURI is the URL used to update, get, or delete the OAuth2 Client.",
+          "description": "OpenID Connect Dynamic Client Registration URL\n\nRegistrationClientURI is the URL used to update, get, or delete the OAuth2 Client.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -677,7 +762,7 @@
           }
         },
         "request_object_signing_alg": {
-          "description": "JWS [JWS] alg algorithm [JWA] that MUST be used for signing Request Objects sent to the OP. All Request Objects\nfrom this Client MUST be rejected, if not signed with this algorithm.",
+          "description": "OpenID Connect Request Object Signing Algorithm\n\nJWS [JWS] alg algorithm [JWA] that MUST be used for signing Request Objects sent to the OP. All Request Objects\nfrom this Client MUST be rejected, if not signed with this algorithm.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -711,7 +796,7 @@
           }
         },
         "scope": {
-          "description": "Scope is a string containing a space-separated list of scope values (as\ndescribed in Section 3.3 of OAuth 2.0 [RFC6749]) that the client\ncan use when requesting access tokens.",
+          "description": "OAuth 2.0 Client Scope\n\nScope is a string containing a space-separated list of scope values (as\ndescribed in Section 3.3 of OAuth 2.0 [RFC6749]) that the client\ncan use when requesting access tokens.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -721,7 +806,7 @@
           }
         },
         "sector_identifier_uri": {
-          "description": "URL using the https scheme to be used in calculating Pseudonymous Identifiers by the OP. The URL references a\nfile with a single JSON array of redirect_uri values.",
+          "description": "OpenID Connect Sector Identifier URI\n\nURL using the https scheme to be used in calculating Pseudonymous Identifiers by the OP. The URL references a\nfile with a single JSON array of redirect_uri values.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -730,8 +815,28 @@
             }
           }
         },
+        "skip_consent": {
+          "description": "SkipConsent skips the consent screen for this client. This field can only\nbe set from the admin API.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "skip_logout_consent": {
+          "description": "SkipLogoutConsent skips the logout consent screen for this client. This field can only\nbe set from the admin API.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
         "subject_type": {
-          "description": "SubjectType requested for responses to this Client. The subject_types_supported Discovery parameter contains a\nlist of the supported subject_type values for this server. Valid types include `pairwise` and `public`.",
+          "description": "OpenID Connect Subject Type\n\nThe `subject_types_supported` Discovery parameter contains a\nlist of the supported subject_type values for this server. Valid types include `pairwise` and `public`.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -741,7 +846,7 @@
           }
         },
         "token_endpoint_auth_method": {
-          "description": "Requested Client Authentication method for the Token Endpoint. The options are client_secret_post,\nclient_secret_basic, private_key_jwt, and none.",
+          "description": "OAuth 2.0 Token Endpoint Authentication Method\n\nRequested Client Authentication method for the Token Endpoint. The options are:\n\n`client_secret_basic`: (default) Send `client_id` and `client_secret` as `application/x-www-form-urlencoded` encoded in the HTTP Authorization header.\n`client_secret_post`: Send `client_id` and `client_secret` as `application/x-www-form-urlencoded` in the HTTP body.\n`private_key_jwt`: Use JSON Web Tokens to authenticate the client.\n`none`: Used for public clients (native apps, mobile apps) which can not have secrets.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -751,7 +856,7 @@
           }
         },
         "token_endpoint_auth_signing_alg": {
-          "description": "Requested Client Authentication signing algorithm for the Token Endpoint.",
+          "description": "OAuth 2.0 Token Endpoint Signing Algorithm\n\nRequested Client Authentication signing algorithm for the Token Endpoint.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -761,7 +866,7 @@
           }
         },
         "tos_uri": {
-          "description": "TermsOfServiceURI is a URL string that points to a human-readable terms of service\ndocument for the client that describes a contractual relationship\nbetween the end-user and the client that the end-user accepts when\nauthorizing the client.",
+          "description": "OAuth 2.0 Client Terms of Service URI\n\nA URL string pointing to a human-readable terms of service\ndocument for the client that describes a contractual relationship\nbetween the end-user and the client that the end-user accepts when\nauthorizing the client.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -771,7 +876,7 @@
           }
         },
         "updated_at": {
-          "description": "UpdatedAt returns the timestamp of the last update.",
+          "description": "OAuth 2.0 Client Last Update Date\n\nUpdatedAt returns the timestamp of the last update.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -781,7 +886,7 @@
           }
         },
         "userinfo_signed_response_alg": {
-          "description": "JWS alg algorithm [JWA] REQUIRED for signing UserInfo Responses. If this is specified, the response will be JWT\n[JWT] serialized, and signed using JWS. The default, if omitted, is for the UserInfo Response to return the Claims\nas a UTF-8 encoded JSON object using the application/json content-type.",
+          "description": "OpenID Connect Request Userinfo Signed Response Algorithm\n\nJWS alg algorithm [JWA] REQUIRED for signing UserInfo Responses. If this is specified, the response will be JWT\n[JWT] serialized, and signed using JWS. The default, if omitted, is for the UserInfo Response to return the Claims\nas a UTF-8 encoded JSON object using the application/json content-type.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -792,7 +897,72 @@
         }
       }
     },
-    "Oauth2TokenBody": {
+    "OAuth2TokenExchange": {
+      "description": "OAuth2 Token Exchange Result",
+      "fields": {
+        "access_token": {
+          "description": "The access token issued by the authorization server.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "expires_in": {
+          "description": "The lifetime in seconds of the access token. For\nexample, the value \"3600\" denotes that the access token will\nexpire in one hour from the time the response was generated.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Int64",
+              "type": "named"
+            }
+          }
+        },
+        "id_token": {
+          "description": "To retrieve a refresh token request the id_token scope.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "refresh_token": {
+          "description": "The refresh token, which can be used to obtain new\naccess tokens. To retrieve it add the scope \"offline\" to your access token request.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "scope": {
+          "description": "The scope of the access token",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        },
+        "token_type": {
+          "description": "The type of the token issued",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "String",
+              "type": "named"
+            }
+          }
+        }
+      }
+    },
+    "Oauth2TokenExchangeRequest": {
       "fields": {
         "client_id": {
           "type": {
@@ -856,10 +1026,74 @@
         }
       }
     },
-    "Oauth2TokenResponse": {
-      "description": "The Access Token Response",
+    "OidcConfiguration": {
+      "description": "Includes links to several endpoints (for example `/oauth2/token`) and exposes information on supported signature algorithms\namong others.",
       "fields": {
-        "access_token": {
+        "authorization_endpoint": {
+          "description": "OAuth 2.0 Authorization Endpoint URL",
+          "type": {
+            "name": "String",
+            "type": "named"
+          }
+        },
+        "backchannel_logout_session_supported": {
+          "description": "OpenID Connect Back-Channel Logout Session Required\n\nBoolean value specifying whether the OP can pass a sid (session ID) Claim in the Logout Token to identify the RP\nsession with the OP. If supported, the sid Claim is also included in ID Tokens issued by the OP",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "backchannel_logout_supported": {
+          "description": "OpenID Connect Back-Channel Logout Supported\n\nBoolean value specifying whether the OP supports back-channel logout, with true indicating support.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "claims_parameter_supported": {
+          "description": "OpenID Connect Claims Parameter Parameter Supported\n\nBoolean value specifying whether the OP supports use of the claims parameter, with true indicating support.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "claims_supported": {
+          "description": "OpenID Connect Supported Claims\n\nJSON array containing a list of the Claim Names of the Claims that the OpenID Provider MAY be able to supply\nvalues for. Note that for privacy or other reasons, this might not be an exhaustive list.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "code_challenge_methods_supported": {
+          "description": "OAuth 2.0 PKCE Supported Code Challenge Methods\n\nJSON array containing a list of Proof Key for Code Exchange (PKCE) [RFC7636] code challenge methods supported\nby this authorization server.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "OAuth2CodeChallenge",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "credentials_endpoint_draft_00": {
+          "description": "OpenID Connect Verifiable Credentials Endpoint\n\nContains the URL of the Verifiable Credentials Endpoint.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -868,16 +1102,21 @@
             }
           }
         },
-        "expires_in": {
+        "credentials_supported_draft_00": {
+          "description": "OpenID Connect Verifiable Credentials Supported\n\nJSON array containing a list of the Verifiable Credentials supported by this authorization server.",
           "type": {
             "type": "nullable",
             "underlying_type": {
-              "name": "Int64",
-              "type": "named"
+              "element_type": {
+                "name": "CredentialSupportedDraft00",
+                "type": "named"
+              },
+              "type": "array"
             }
           }
         },
-        "id_token": {
+        "end_session_endpoint": {
+          "description": "OpenID Connect End-Session Endpoint\n\nURL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -886,7 +1125,75 @@
             }
           }
         },
-        "refresh_token": {
+        "frontchannel_logout_session_supported": {
+          "description": "OpenID Connect Front-Channel Logout Session Required\n\nBoolean value specifying whether the OP can pass iss (issuer) and sid (session ID) query parameters to identify\nthe RP session with the OP when the frontchannel_logout_uri is used. If supported, the sid Claim is also\nincluded in ID Tokens issued by the OP.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "frontchannel_logout_supported": {
+          "description": "OpenID Connect Front-Channel Logout Supported\n\nBoolean value specifying whether the OP supports HTTP-based logout, with true indicating support.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "grant_types_supported": {
+          "description": "OAuth 2.0 Supported Grant Types\n\nJSON array containing a list of the OAuth 2.0 Grant Type values that this OP supports.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "OAuth2GrantType",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "id_token_signed_response_alg": {
+          "description": "OpenID Connect Default ID Token Signing Algorithms\n\nAlgorithm used to sign OpenID Connect ID Tokens.",
+          "type": {
+            "element_type": {
+              "name": "String",
+              "type": "named"
+            },
+            "type": "array"
+          }
+        },
+        "id_token_signing_alg_values_supported": {
+          "description": "OpenID Connect Supported ID Token Signing Algorithms\n\nJSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for the ID Token\nto encode the Claims in a JWT.",
+          "type": {
+            "element_type": {
+              "name": "OAuth2SigningAlgorithm",
+              "type": "named"
+            },
+            "type": "array"
+          }
+        },
+        "issuer": {
+          "description": "OpenID Connect Issuer URL\n\nAn URL using the https scheme with no query or fragment component that the OP asserts as its IssuerURL Identifier.\nIf IssuerURL discovery is supported , this value MUST be identical to the issuer value returned\nby WebFinger. This also MUST be identical to the iss Claim value in ID Tokens issued from this IssuerURL.",
+          "type": {
+            "name": "String",
+            "type": "named"
+          }
+        },
+        "jwks_uri": {
+          "description": "OpenID Connect Well-Known JSON Web Keys URL\n\nURL of the OP's JSON Web Key Set [JWK] document. This contains the signing key(s) the RP uses to validate\nsignatures from the OP. The JWK Set MAY also contain the Server's encryption key(s), which are used by RPs\nto encrypt requests to the Server. When both signing and encryption keys are made available, a use (Key Use)\nparameter value is REQUIRED for all keys in the referenced JWK Set to indicate each key's intended usage.\nAlthough some algorithms allow the same key to be used for both signatures and encryption, doing so is\nNOT RECOMMENDED, as it is less secure. The JWK x5c parameter MAY be used to provide X.509 representations of\nkeys provided. When used, the bare key values MUST still be present and MUST match those in the certificate.",
+          "type": {
+            "name": "String",
+            "type": "named"
+          }
+        },
+        "registration_endpoint": {
+          "description": "OpenID Connect Dynamic Client Registration Endpoint URL",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -895,7 +1202,74 @@
             }
           }
         },
-        "scope": {
+        "request_object_signing_alg_values_supported": {
+          "description": "OpenID Connect Supported Request Object Signing Algorithms\n\nJSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for Request Objects,\nwhich are described in Section 6.1 of OpenID Connect Core 1.0 [OpenID.Core]. These algorithms are used both when\nthe Request Object is passed by value (using the request parameter) and when it is passed by reference\n(using the request_uri parameter).",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "OAuth2SigningAlgorithm",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "request_parameter_supported": {
+          "description": "OpenID Connect Request Parameter Supported\n\nBoolean value specifying whether the OP supports use of the request parameter, with true indicating support.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "request_uri_parameter_supported": {
+          "description": "OpenID Connect Request URI Parameter Supported\n\nBoolean value specifying whether the OP supports use of the request_uri parameter, with true indicating support.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "require_request_uri_registration": {
+          "description": "OpenID Connect Requires Request URI Registration\n\nBoolean value specifying whether the OP requires any request_uri values used to be pre-registered\nusing the request_uris registration parameter.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Boolean",
+              "type": "named"
+            }
+          }
+        },
+        "response_modes_supported": {
+          "description": "OAuth 2.0 Supported Response Modes\n\nJSON array containing a list of the OAuth 2.0 response_mode values that this OP supports.",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "String",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "response_types_supported": {
+          "description": "OAuth 2.0 Supported Response Types\n\nJSON array containing a list of the OAuth 2.0 response_type values that this OP supports. Dynamic OpenID\nProviders MUST support the code, id_token, and the token id_token Response Type values.",
+          "type": {
+            "element_type": {
+              "name": "String",
+              "type": "named"
+            },
+            "type": "array"
+          }
+        },
+        "revocation_endpoint": {
+          "description": "OAuth 2.0 Token Revocation URL\n\nURL of the authorization server's OAuth 2.0 revocation endpoint.",
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -904,18 +1278,85 @@
             }
           }
         },
-        "token_type": {
+        "scopes_supported": {
+          "description": "OAuth 2.0 Supported Scope Values\n\nJSON array containing a list of the OAuth 2.0 [RFC6749] scope values that this server supports. The server MUST\nsupport the openid scope value. Servers MAY choose not to advertise some supported scope values even when this parameter is used",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "OAuth2Scope",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "subject_types_supported": {
+          "description": "OpenID Connect Supported Subject Types\n\nJSON array containing a list of the Subject Identifier types that this OP supports. Valid types include\npairwise and public.",
+          "type": {
+            "element_type": {
+              "name": "OpenIDConnectSubjectType",
+              "type": "named"
+            },
+            "type": "array"
+          }
+        },
+        "token_endpoint": {
+          "description": "OAuth 2.0 Token Endpoint URL",
+          "type": {
+            "name": "String",
+            "type": "named"
+          }
+        },
+        "token_endpoint_auth_methods_supported": {
+          "description": "OAuth 2.0 Supported Client Authentication Methods\n\nJSON array containing a list of Client Authentication methods supported by this Token Endpoint. The options are\nclient_secret_post, client_secret_basic, client_secret_jwt, and private_key_jwt, as described in Section 9 of OpenID Connect Core 1.0",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "TokenEndpointAuthMethod",
+                "type": "named"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "userinfo_endpoint": {
+          "description": "OpenID Connect Userinfo URL\n\nURL of the OP's UserInfo Endpoint.",
           "type": {
             "type": "nullable",
             "underlying_type": {
               "name": "String",
               "type": "named"
+            }
+          }
+        },
+        "userinfo_signed_response_alg": {
+          "description": "OpenID Connect User Userinfo Signing Algorithm\n\nAlgorithm used to sign OpenID Connect Userinfo Responses.",
+          "type": {
+            "element_type": {
+              "name": "String",
+              "type": "named"
+            },
+            "type": "array"
+          }
+        },
+        "userinfo_signing_alg_values_supported": {
+          "description": "OpenID Connect Supported Userinfo Signing Algorithm\n\nJSON array containing a list of the JWS [JWS] signing algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "element_type": {
+                "name": "OAuth2SigningAlgorithm",
+                "type": "named"
+              },
+              "type": "array"
             }
           }
         }
       }
     },
-    "RevokeOAuth2TokenBody": {
+    "RevokeOAuth2TokenRequest": {
       "fields": {
         "client_id": {
           "type": {
@@ -943,74 +1384,9 @@
         }
       }
     },
-    "WellKnown": {
-      "description": "It includes links to several endpoints (e.g. /oauth2/token) and exposes information on supported signature algorithms\namong others.",
+    "VerifiableCredentialProof": {
       "fields": {
-        "authorization_endpoint": {
-          "description": "URL of the OP's OAuth 2.0 Authorization Endpoint.",
-          "type": {
-            "name": "String",
-            "type": "named"
-          }
-        },
-        "backchannel_logout_session_supported": {
-          "description": "Boolean value specifying whether the OP can pass a sid (session ID) Claim in the Logout Token to identify the RP\nsession with the OP. If supported, the sid Claim is also included in ID Tokens issued by the OP",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "backchannel_logout_supported": {
-          "description": "Boolean value specifying whether the OP supports back-channel logout, with true indicating support.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "claims_parameter_supported": {
-          "description": "Boolean value specifying whether the OP supports use of the claims parameter, with true indicating support.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "claims_supported": {
-          "description": "JSON array containing a list of the Claim Names of the Claims that the OpenID Provider MAY be able to supply\nvalues for. Note that for privacy or other reasons, this might not be an exhaustive list.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "String",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "code_challenge_methods_supported": {
-          "description": "JSON array containing a list of Proof Key for Code Exchange (PKCE) [RFC7636] code challenge methods supported\nby this authorization server.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "OAuth2CodeChallenge",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "end_session_endpoint": {
-          "description": "URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP.",
+        "jwt": {
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -1019,65 +1395,20 @@
             }
           }
         },
-        "frontchannel_logout_session_supported": {
-          "description": "Boolean value specifying whether the OP can pass iss (issuer) and sid (session ID) query parameters to identify\nthe RP session with the OP when the frontchannel_logout_uri is used. If supported, the sid Claim is also\nincluded in ID Tokens issued by the OP.",
+        "proof_type": {
           "type": {
             "type": "nullable",
             "underlying_type": {
-              "name": "Boolean",
+              "name": "String",
               "type": "named"
             }
           }
-        },
-        "frontchannel_logout_supported": {
-          "description": "Boolean value specifying whether the OP supports HTTP-based logout, with true indicating support.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "grant_types_supported": {
-          "description": "JSON array containing a list of the OAuth 2.0 Grant Type values that this OP supports.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "OAuth2GrantType",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "id_token_signing_alg_values_supported": {
-          "description": "JSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for the ID Token\nto encode the Claims in a JWT.",
-          "type": {
-            "element_type": {
-              "name": "OAuth2SigningAlgorithm",
-              "type": "named"
-            },
-            "type": "array"
-          }
-        },
-        "issuer": {
-          "description": "URL using the https scheme with no query or fragment component that the OP asserts as its IssuerURL Identifier.\nIf IssuerURL discovery is supported , this value MUST be identical to the issuer value returned\nby WebFinger. This also MUST be identical to the iss Claim value in ID Tokens issued from this IssuerURL.",
-          "type": {
-            "name": "String",
-            "type": "named"
-          }
-        },
-        "jwks_uri": {
-          "description": "URL of the OP's JSON Web Key Set [JWK] document. This contains the signing key(s) the RP uses to validate\nsignatures from the OP. The JWK Set MAY also contain the Server's encryption key(s), which are used by RPs\nto encrypt requests to the Server. When both signing and encryption keys are made available, a use (Key Use)\nparameter value is REQUIRED for all keys in the referenced JWK Set to indicate each key's intended usage.\nAlthough some algorithms allow the same key to be used for both signatures and encryption, doing so is\nNOT RECOMMENDED, as it is less secure. The JWK x5c parameter MAY be used to provide X.509 representations of\nkeys provided. When used, the bare key values MUST still be present and MUST match those in the certificate.",
-          "type": {
-            "name": "String",
-            "type": "named"
-          }
-        },
-        "registration_endpoint": {
-          "description": "URL of the OP's Dynamic Client Registration Endpoint.",
+        }
+      }
+    },
+    "VerifiableCredentialResponse": {
+      "fields": {
+        "credential_draft_00": {
           "type": {
             "type": "nullable",
             "underlying_type": {
@@ -1086,145 +1417,12 @@
             }
           }
         },
-        "request_object_signing_alg_values_supported": {
-          "description": "JSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for Request Objects,\nwhich are described in Section 6.1 of OpenID Connect Core 1.0 [OpenID.Core]. These algorithms are used both when\nthe Request Object is passed by value (using the request parameter) and when it is passed by reference\n(using the request_uri parameter).",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "OAuth2SigningAlgorithm",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "request_parameter_supported": {
-          "description": "Boolean value specifying whether the OP supports use of the request parameter, with true indicating support.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "request_uri_parameter_supported": {
-          "description": "Boolean value specifying whether the OP supports use of the request_uri parameter, with true indicating support.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "require_request_uri_registration": {
-          "description": "Boolean value specifying whether the OP requires any request_uri values used to be pre-registered\nusing the request_uris registration parameter.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "Boolean",
-              "type": "named"
-            }
-          }
-        },
-        "response_modes_supported": {
-          "description": "JSON array containing a list of the OAuth 2.0 response_mode values that this OP supports.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "String",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "response_types_supported": {
-          "description": "JSON array containing a list of the OAuth 2.0 response_type values that this OP supports. Dynamic OpenID\nProviders MUST support the code, id_token, and the token id_token Response Type values.",
-          "type": {
-            "element_type": {
-              "name": "String",
-              "type": "named"
-            },
-            "type": "array"
-          }
-        },
-        "revocation_endpoint": {
-          "description": "URL of the authorization server's OAuth 2.0 revocation endpoint.",
+        "format": {
           "type": {
             "type": "nullable",
             "underlying_type": {
               "name": "String",
               "type": "named"
-            }
-          }
-        },
-        "scopes_supported": {
-          "description": "SON array containing a list of the OAuth 2.0 [RFC6749] scope values that this server supports. The server MUST\nsupport the openid scope value. Servers MAY choose not to advertise some supported scope values even when this parameter is used",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "OAuth2Scope",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "subject_types_supported": {
-          "description": "JSON array containing a list of the Subject Identifier types that this OP supports. Valid types include\npairwise and public.",
-          "type": {
-            "element_type": {
-              "name": "OpenIDConnectSubjectType",
-              "type": "named"
-            },
-            "type": "array"
-          }
-        },
-        "token_endpoint": {
-          "description": "URL of the OP's OAuth 2.0 Token Endpoint",
-          "type": {
-            "name": "String",
-            "type": "named"
-          }
-        },
-        "token_endpoint_auth_methods_supported": {
-          "description": "JSON array containing a list of Client Authentication methods supported by this Token Endpoint. The options are\nclient_secret_post, client_secret_basic, client_secret_jwt, and private_key_jwt, as described in Section 9 of OpenID Connect Core 1.0",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "TokenEndpointAuthMethod",
-                "type": "named"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "userinfo_endpoint": {
-          "description": "URL of the OP's UserInfo Endpoint.",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "name": "String",
-              "type": "named"
-            }
-          }
-        },
-        "userinfo_signing_alg_values_supported": {
-          "description": "JSON array containing a list of the JWS [JWS] signing algorithms (alg values) [JWA] supported by the UserInfo Endpoint to encode the Claims in a JWT [JWT].",
-          "type": {
-            "type": "nullable",
-            "underlying_type": {
-              "element_type": {
-                "name": "OAuth2SigningAlgorithm",
-                "type": "named"
-              },
-              "type": "array"
             }
           }
         }
@@ -1232,6 +1430,37 @@
     }
   },
   "procedures": [
+    {
+      "request": {
+        "url": "/credentials",
+        "method": "post",
+        "requestBody": {
+          "contentType": "application/json",
+          "schema": {
+            "type": "CreateVerifiableCredentialRequestBody",
+            "nullable": true
+          }
+        }
+      },
+      "arguments": {
+        "body": {
+          "description": "Request body of POST /credentials",
+          "type": {
+            "type": "nullable",
+            "underlying_type": {
+              "name": "CreateVerifiableCredentialRequestBody",
+              "type": "named"
+            }
+          }
+        }
+      },
+      "description": "Issues a Verifiable Credential",
+      "name": "createVerifiableCredential",
+      "result_type": {
+        "name": "VerifiableCredentialResponse",
+        "type": "named"
+      }
+    },
     {
       "request": {
         "url": "/oauth2/register",
@@ -1245,14 +1474,15 @@
       },
       "arguments": {
         "body": {
+          "description": "Request body of POST /oauth2/register",
           "type": {
             "name": "OAuth2Client",
             "type": "named"
           }
         }
       },
-      "description": "Register an OAuth 2.0 Client using the OpenID / OAuth2 Dynamic Client Registration Management Protocol",
-      "name": "dynamicClientRegistrationCreateOAuth2Client",
+      "description": "Register OAuth2 Client using OpenID Dynamic Client Registration",
+      "name": "createOidcDynamicClient",
       "result_type": {
         "name": "OAuth2Client",
         "type": "named"
@@ -1264,11 +1494,18 @@
         "method": "put",
         "parameters": [
           {
+            "style": "simple",
+            "explode": false,
             "name": "id",
             "in": "path",
             "schema": {
               "type": "String"
             }
+          }
+        ],
+        "security": [
+          {
+            "bearer": []
           }
         ],
         "requestBody": {
@@ -1280,21 +1517,22 @@
       },
       "arguments": {
         "body": {
+          "description": "Request body of PUT /oauth2/register/{id}",
           "type": {
             "name": "OAuth2Client",
             "type": "named"
           }
         },
         "id": {
-          "description": "The id of the OAuth 2.0 Client.",
+          "description": "OAuth 2.0 Client ID",
           "type": {
             "name": "String",
             "type": "named"
           }
         }
       },
-      "description": "Update an OAuth 2.0 Client using the OpenID / OAuth2 Dynamic Client Registration Management Protocol",
-      "name": "dynamicClientRegistrationUpdateOAuth2Client",
+      "description": "Set OAuth2 Client using OpenID Dynamic Client Registration",
+      "name": "setOidcDynamicClient",
       "result_type": {
         "name": "OAuth2Client",
         "type": "named"
@@ -1306,11 +1544,18 @@
         "method": "delete",
         "parameters": [
           {
+            "style": "simple",
+            "explode": false,
             "name": "id",
             "in": "path",
             "schema": {
               "type": "String"
             }
+          }
+        ],
+        "security": [
+          {
+            "bearer": []
           }
         ]
       },
@@ -1323,8 +1568,8 @@
           }
         }
       },
-      "description": "Deletes an OAuth 2.0 Client using the OpenID / OAuth2 Dynamic Client Registration Management Protocol",
-      "name": "dynamicClientRegistrationDeleteOAuth2Client",
+      "description": "Delete OAuth 2.0 Client using the OpenID Dynamic Client Registration Management Protocol",
+      "name": "deleteOidcDynamicClient",
       "result_type": {
         "type": "nullable",
         "underlying_type": {
@@ -1340,33 +1585,24 @@
         "requestBody": {
           "contentType": "application/x-www-form-urlencoded",
           "schema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "String",
-                "nullable": true
-              },
-              "client_secret": {
-                "type": "String",
-                "nullable": true
-              },
-              "token": {
-                "type": "String"
-              }
-            }
+            "type": "RevokeOAuth2TokenRequest",
+            "nullable": true
           }
         }
       },
       "arguments": {
         "body": {
-          "description": "Form data of /oauth2/revoke",
+          "description": "Request body of POST /oauth2/revoke",
           "type": {
-            "name": "RevokeOAuth2TokenBody",
-            "type": "named"
+            "type": "nullable",
+            "underlying_type": {
+              "name": "RevokeOAuth2TokenRequest",
+              "type": "named"
+            }
           }
         }
       },
-      "description": "Revoke OAuth2 Tokens",
+      "description": "Revoke OAuth 2.0 Access or Refresh Token",
       "name": "revokeOAuth2Token",
       "result_type": {
         "type": "nullable",
@@ -1383,52 +1619,27 @@
         "requestBody": {
           "contentType": "application/x-www-form-urlencoded",
           "schema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "String",
-                "nullable": true
-              },
-              "client_secret": {
-                "type": "String",
-                "nullable": true
-              },
-              "code": {
-                "type": "String",
-                "nullable": true
-              },
-              "grant_type": {
-                "type": "String"
-              },
-              "redirect_uri": {
-                "type": "String",
-                "nullable": true
-              },
-              "refresh_token": {
-                "type": "String",
-                "nullable": true
-              },
-              "scope": {
-                "type": "String",
-                "nullable": true
-              }
-            }
+            "type": "Oauth2TokenExchangeRequest",
+            "nullable": true
           }
         }
       },
       "arguments": {
         "body": {
-          "description": "Form data of /oauth2/token",
+          "description": "Request body of POST /oauth2/token",
           "type": {
-            "name": "Oauth2TokenBody",
-            "type": "named"
+            "type": "nullable",
+            "underlying_type": {
+              "name": "Oauth2TokenExchangeRequest",
+              "type": "named"
+            }
           }
         }
       },
       "description": "The OAuth 2.0 Token Endpoint",
-      "name": "oauth2Token",
+      "name": "oauth2TokenExchange",
       "result_type": {
-        "name": "Oauth2TokenResponse",
+        "name": "OAuth2TokenExchange",
         "type": "named"
       }
     }
@@ -1449,20 +1660,6 @@
       }
     },
     "JSON": {
-      "aggregate_functions": {},
-      "comparison_operators": {},
-      "representation": {
-        "type": "json"
-      }
-    },
-    "JSONRawMessage": {
-      "aggregate_functions": {},
-      "comparison_operators": {},
-      "representation": {
-        "type": "json"
-      }
-    },
-    "JoseJSONWebKeySet": {
       "aggregate_functions": {},
       "comparison_operators": {},
       "representation": {
@@ -1523,7 +1720,8 @@
       "representation": {
         "one_of": [
           "none",
-          "RS256"
+          "RS256",
+          "ES256"
         ],
         "type": "enum"
       }

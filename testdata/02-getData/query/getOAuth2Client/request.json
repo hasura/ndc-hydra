@@ -109,14 +109,6 @@
               "column": "owner",
               "type": "column"
             },
-            "password_grant_access_token_lifespan": {
-              "column": "password_grant_access_token_lifespan",
-              "type": "column"
-            },
-            "password_grant_refresh_token_lifespan": {
-              "column": "password_grant_refresh_token_lifespan",
-              "type": "column"
-            },
             "policy_uri": {
               "column": "policy_uri",
               "type": "column"
@@ -161,8 +153,20 @@
               "column": "response_types",
               "type": "column"
             },
+            "scope": {
+              "column": "scope",
+              "type": "column"
+            },
             "sector_identifier_uri": {
               "column": "sector_identifier_uri",
+              "type": "column"
+            },
+            "skip_consent": {
+              "column": "skip_consent",
+              "type": "column"
+            },
+            "skip_logout_consent": {
+              "column": "skip_logout_consent",
               "type": "column"
             },
             "subject_type": {

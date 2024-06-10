@@ -1,5 +1,5 @@
-file: https://raw.githubusercontent.com/ory/hydra/v1.11.10/spec/swagger.json
-spec: oas2
+file: https://raw.githubusercontent.com/ory/hydra/v2.2.0/internal/httpclient/api/openapi.yaml
+spec: oas3
 envPrefix: HYDRA_ADMIN
 patchBefore:
   - path: patch-before.yaml

@@ -3,9 +3,10 @@
   "operations": [
     {
       "type": "procedure",
-      "name": "deleteOAuth2Token",
+      "name": "revokeOAuth2LoginSessions",
       "arguments": {
-        "client_id": "9dX7Ph9Zgs"
+        "sid": "8UNRGYWiRb",
+        "subject": "9PIQZxuHCQ"
       }
     }
   ]
