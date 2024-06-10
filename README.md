@@ -5,7 +5,10 @@ Ory Hydra connector provides instant queries and mutations to request Ory Hydra 
 This connector is built upon the [NDC Rest](https://github.com/hasura/ndc-rest) with [Ory Hydra's REST API Specification](https://raw.githubusercontent.com/ory/hydra/master/internal/httpclient/api/openapi.yaml).
 
 > [!NOTE]
-> THe connector `v1.x` supports Hydra v2 API spec. Use `v0.x` if you want to use Hydra v1.
+> The connector `v1.x` supports Hydra v2 API spec. Use `v0.x` if you want to use Hydra v1.
+
+> [!NOTE]
+> Support `client_secret_post` auth method for public APIs that require `client_credentials` credentials such as `/oauth2/*` only. The connector mainly supports admin API wrappers for Hasura Engine v3.
 
 ## Environment Variables
 
