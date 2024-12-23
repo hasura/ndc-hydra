@@ -1,5 +1,8 @@
 # Ory Hydra Connector
 
+> [!IMPORTANT]
+> Deprecated. Use the [HTTP connector](https://github.com/hasura/ndc-http) with [Ory Hydra](https://github.com/hasura/ndc-http-recipes/tree/main/recipes/ory) recipe instead. 
+
 Ory Hydra connector provides instant queries and mutations to request Ory Hydra API resources.
 
 This connector is built upon the [NDC Rest](https://github.com/hasura/ndc-rest) with [Ory Hydra's REST API Specification](https://raw.githubusercontent.com/ory/hydra/master/internal/httpclient/api/openapi.yaml).
